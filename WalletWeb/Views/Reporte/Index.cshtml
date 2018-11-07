@@ -1,0 +1,111 @@
+﻿<h2>Reporte</h2>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<div class="form-horizontal">
+    <h4>Consulta Movimientos</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <table width="100%">
+        <tr>
+        <td width="50%">
+    <div class="form-group">
+        <label class="control-label col-md-2" for="TipoMovimientoId">Tipo Movimiento</label>
+        <div class="col-md-10">
+            @Html.DropDownList("Tipo Movimiento",
+                                    (SelectList)ViewBag.TiposMovimiento, 
+                                    "Seleccione Tipo Movimiento", new { @style = "width: 250px;" })
+        </div>
+    </div>
+            </td>
+            <td width="50%">
+    <div class="form-group">
+        <label class="control-label col-md-2" for="CuentaId">Cuenta</label>
+        <div class="col-md-10">
+            @Html.DropDownList("Cuenta", 
+                                (SelectList)ViewBag.Cuentas, 
+                                "Seleccione Cuenta", new { @style = "width: 250px" })
+        </div>
+    </div>
+                </td>
+            </tr>
+        <tr>
+            <td width="50%">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="CategoriaId">Categoria</label>
+                    <div class="col-md-10">
+                        @Html.DropDownList("Categoria",
+                                (SelectList)ViewBag.Categorias,
+                                "Seleccione Categoria", new { @style = "width: 250px" })
+                    </div>
+                </div>
+            </td>
+
+            <td width="50%">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="Fecha">Fecha</label>
+                    <div class="col-md-10">
+                        <input type="date" id="FechaInicio" value="2018-01-01"/>
+                        <input type="date" id="FechaFin" value="2018-12-31" />
+                    </div>
+                </div>
+            </td>
+            </tr>
+        </table>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Consultar" id="btnConsultar" class="btn btn-default"/>
+        </div>
+    </div>
+</div>
+
+<table class="table" id="tablemovimientos">
+    <tr>
+        <th>
+            Tipo Movimiento
+        </th>
+        <th>
+            Categoria
+        </th>
+        <th>
+            Cuenta
+        </th>
+        <th>
+            Valor
+        </th>
+        <th></th>
+    </tr>
+</table>
+
+
+<script>
+    $("#btnConsultar").click(function () {
+        $.ajax({
+            url: "http://localhost:51170//api/reporte/GetReporte",
+            type: "GET",
+            dataType: "json",
+            data: {
+                TipoMovimientoId: $("#Tipo_Movimiento").val() == "" ? 0 : $("#Tipo_Movimiento").val(),
+                CategoriaId: $("#Categoria").val() == "" ? 0 : $("#Categoria").val(),
+                CuentaId: $("#Cuenta").val() == "" ? 0 : $("#Cuenta").val(),
+                FechaInicio: $("#FechaInicio").val(),
+                FechaFin: $("#FechaFin").val(),
+            }
+        }).done(function(data) {
+            $.each(data,function(i,item)
+            {
+                var TipoMovimiento = item.TipoMovimiento;
+                var Categoria = item.Categoria;
+                var Cuenta = item.Cuenta;
+                var Valor = item.Valor;
+
+                //$("table tr:not(:first-child)").remove();
+                var fila = "<tr><td>" + TipoMovimiento + "</td><td>" + Categoria + "</td><td>" + Cuenta + "</td><td>" + Valor + "</td></tr>";
+                $("#tablemovimientos").append(fila);
+            })
+           })
+          .fail(function( jqXHR, textStatus ) {
+              alert( "Request failed: " + textStatus );
+          })
+        });
+</script>

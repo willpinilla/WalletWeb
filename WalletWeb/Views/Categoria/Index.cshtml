@@ -1,0 +1,38 @@
+﻿@model IEnumerable<WalletWeb.Categoria>
+
+@{
+    ViewBag.Title = "Categorias";
+}
+
+<h2>Categorias</h2>
+
+<p>
+    @Html.ActionLink("Nueva Categoria", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayName("Tipo Movimiento")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoMovimiento)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id=item.Id  }) |
+            @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
